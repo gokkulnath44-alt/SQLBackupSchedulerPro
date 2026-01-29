@@ -1,0 +1,410 @@
+﻿<UserControl x:Class="SQLBackupSchedulerPro.Views.DashboardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:conv="clr-namespace:SQLBackupSchedulerPro.Converters"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             Background="#F8F9FA">
+
+    <UserControl.Resources>
+        <conv:DiskStatusColorConverter x:Key="DiskStatusColorConverter"/>
+
+        <!-- Modern Card Style -->
+        <Style x:Key="CardStyle" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Padding" Value="24"/>
+            <Setter Property="Margin" Value="0,0,0,16"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="20" 
+                                    ShadowDepth="0" 
+                                    Opacity="0.08" 
+                                    Color="#000000"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Title Text Style -->
+        <Style x:Key="TitleStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="28"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="#1A1D1F"/>
+            <Setter Property="Margin" Value="0,0,0,32"/>
+        </Style>
+
+        <!-- Section Header Style -->
+        <Style x:Key="SectionHeaderStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#6F7782"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+            
+        </Style>
+
+        <!-- Value Text Style -->
+        <Style x:Key="ValueStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#1A1D1F"/>
+        </Style>
+
+        <!-- Stat Card Style -->
+        <Style x:Key="StatCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Padding" Value="20"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="20" 
+                                    ShadowDepth="0" 
+                                    Opacity="0.08" 
+                                    Color="#000000"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Icon Style -->
+        <Style x:Key="IconBorderStyle" TargetType="Border">
+            <Setter Property="Width" Value="48"/>
+            <Setter Property="Height" Value="48"/>
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Margin" Value="0,0,0,16"/>
+        </Style>
+
+        <!-- Status Badge Style -->
+        <Style x:Key="StatusBadgeStyle" TargetType="Border">
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+        </Style>
+
+        <!-- Fade In Animation -->
+        <Storyboard x:Key="FadeInStoryboard">
+            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                           From="0" To="1" Duration="0:0:0.4"
+                           />
+        </Storyboard>
+
+        <QuadraticEase x:Key="QuadraticEase" EasingMode="EaseOut"/>
+    </UserControl.Resources>
+
+    <UserControl.Triggers>
+        <EventTrigger RoutedEvent="Loaded">
+            <BeginStoryboard Storyboard="{StaticResource FadeInStoryboard}"/>
+        </EventTrigger>
+    </UserControl.Triggers>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" 
+                  HorizontalScrollBarVisibility="Disabled"
+                  Padding="40,32,40,40">
+        <StackPanel MaxWidth="1200">
+
+            <!-- Page Title -->
+            <TextBlock Text="Dashboard" 
+                      Style="{StaticResource TitleStyle}"/>
+
+            <!-- Stats Grid -->
+            <Grid Margin="0,0,0,32">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="16"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="16"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Last Backup Status Card -->
+                <Border Grid.Column="0" Style="{StaticResource StatCardStyle}">
+                    <StackPanel>
+                        <Border Style="{StaticResource IconBorderStyle}">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="#E8F5E9" Offset="0"/>
+                                    <GradientStop Color="#C8E6C9" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <Path Data="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"
+                                  Fill="#2E7D32"
+                                  Stretch="Uniform"
+                                  Width="24" Height="24"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center"/>
+                        </Border>
+
+                        <TextBlock Text="LAST BACKUP STATUS" 
+                                  Style="{StaticResource SectionHeaderStyle}"/>
+                        <TextBlock Text="{Binding LastRunStatus}" 
+                                  Style="{StaticResource ValueStyle}"
+                                  FontSize="20"
+                                  Foreground="#2E7D32"
+                                  Margin="0,0,0,12"/>
+
+                        <TextBlock Text="{Binding LastRunTime}" 
+                                  FontSize="13"
+                                  Foreground="#6F7782"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Next Scheduled Backup Card -->
+                <Border Grid.Column="2" Style="{StaticResource StatCardStyle}">
+                    <StackPanel>
+                        <Border Style="{StaticResource IconBorderStyle}">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="#E3F2FD" Offset="0"/>
+                                    <GradientStop Color="#BBDEFB" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <Path Data="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"
+                                  Fill="#1565C0"
+                                  Stretch="Uniform"
+                                  Width="24" Height="24"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center"/>
+                        </Border>
+
+                        <TextBlock Text="NEXT SCHEDULED" 
+                                  Style="{StaticResource SectionHeaderStyle}"/>
+                        <TextBlock Text="{Binding NextRunTime}" 
+                                  Style="{StaticResource ValueStyle}"
+                                  FontSize="16"
+                                  Foreground="#1565C0"
+                                  TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Disk Space Card -->
+                <Border Grid.Column="4" Style="{StaticResource StatCardStyle}">
+                    <StackPanel>
+                        <Border Style="{StaticResource IconBorderStyle}">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="#F3E5F5" Offset="0"/>
+                                    <GradientStop Color="#E1BEE7" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <Path Data="M6 2c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6H6zm7 7V3.5L18.5 9H13z"
+                                  Fill="#6A1B9A"
+                                  Stretch="Uniform"
+                                  Width="24" Height="24"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center"/>
+                        </Border>
+
+                        <TextBlock Text="FREE DISK SPACE" 
+                                  Style="{StaticResource SectionHeaderStyle}"/>
+                        <TextBlock Text="{Binding FreeDiskSpaceGB, StringFormat={}{0} GB}" 
+                                  Style="{StaticResource ValueStyle}"
+                                  FontSize="20"
+                                  Foreground="#6A1B9A"
+                                  Margin="0,0,0,8"/>
+
+                        <Border Style="{StaticResource StatusBadgeStyle}">
+                            <Border.Background>
+                                <SolidColorBrush Color="{Binding DiskStatus, Converter={StaticResource DiskStatusColorConverter}}"/>
+                            </Border.Background>
+                            <TextBlock Text="{Binding DiskStatus}" 
+                                      FontSize="12"
+                                      FontWeight="SemiBold"
+                                      Foreground="White"
+                                      />
+                        </Border>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- Backup Information Section -->
+            <Border Style="{StaticResource CardStyle}">
+                <StackPanel>
+                    <TextBlock Text="Backup Information" 
+                              FontSize="20"
+                              FontWeight="Bold"
+                              Foreground="#1A1D1F"
+                              Margin="0,0,0,24"/>
+
+                    <!-- Info Rows -->
+                    <Grid Margin="0,0,0,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border Grid.Column="0" 
+                                Background="#F1F3F5" 
+                                CornerRadius="8" 
+                                Width="40" Height="40"
+                                VerticalAlignment="Center"
+                                Margin="0,0,16,0">
+                            <Path Data="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"
+                                  Fill="#495057"
+                                  Stretch="Uniform"
+                                  Width="20" Height="20"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center"/>
+                        </Border>
+
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock Text="Last Backup Time" 
+                                      FontSize="13"
+                                      Foreground="#6F7782"
+                                      Margin="0,0,0,4"/>
+                            <TextBlock Text="{Binding LastRunTime}" 
+                                      FontSize="15"
+                                      FontWeight="SemiBold"
+                                      Foreground="#1A1D1F"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <Separator Background="#E9ECEF" Margin="0,0,0,20"/>
+
+                    <Grid Margin="0,0,0,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border Grid.Column="0" 
+                                Background="#F1F3F5" 
+                                CornerRadius="8" 
+                                Width="40" Height="40"
+                                VerticalAlignment="Center"
+                                Margin="0,0,16,0">
+                            <Path Data="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"
+                                  Fill="#495057"
+                                  Stretch="Uniform"
+                                  Width="20" Height="20"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center"/>
+                        </Border>
+
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock Text="Last Backup Status" 
+                                      FontSize="13"
+                                      Foreground="#6F7782"
+                                      Margin="0,0,0,4"/>
+                            <TextBlock Text="{Binding LastRunStatus}" 
+                                      FontSize="15"
+                                      FontWeight="SemiBold"
+                                      Foreground="#2E7D32"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <Separator Background="#E9ECEF" Margin="0,0,0,20"/>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border Grid.Column="0" 
+                                Background="#F1F3F5" 
+                                CornerRadius="8" 
+                                Width="40" Height="40"
+                                VerticalAlignment="Center"
+                                Margin="0,0,16,0">
+                            <Path Data="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"
+                                  Fill="#495057"
+                                  Stretch="Uniform"
+                                  Width="20" Height="20"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center"/>
+                        </Border>
+
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock Text="Next Scheduled Backup" 
+                                      FontSize="13"
+                                      Foreground="#6F7782"
+                                      Margin="0,0,0,4"/>
+                            <TextBlock Text="{Binding NextRunTime}" 
+                                      FontSize="15"
+                                      FontWeight="SemiBold"
+                                      Foreground="#1A1D1F"/>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- System Health Section -->
+            <Border Style="{StaticResource CardStyle}">
+                <StackPanel>
+                    <TextBlock Text="System Health" 
+                              FontSize="20"
+                              FontWeight="Bold"
+                              Foreground="#1A1D1F"
+                              Margin="0,0,0,24"/>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="20"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Disk Space Panel -->
+                        <Border Grid.Column="0" 
+                                Background="#F8F9FA" 
+                                CornerRadius="10" 
+                                Padding="20">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,16">
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <Ellipse Width="12" Height="12" 
+                                                Fill="{Binding DiskStatus, Converter={StaticResource DiskStatusColorConverter}}"
+                                                Margin="0,0,8,0"/>
+                                        <TextBlock Text="DISK SPACE" 
+                                                  FontSize="12"
+                                                  FontWeight="SemiBold"
+                                                  Foreground="#6F7782"
+                                                  />
+                                    </StackPanel>
+                                </Grid>
+
+                                <TextBlock Text="{Binding FreeDiskSpaceGB, StringFormat={}{0} GB}" 
+                                          FontSize="32"
+                                          FontWeight="Bold"
+                                          Foreground="#1A1D1F"
+                                          Margin="0,0,0,8"/>
+
+                                <TextBlock Text="Available" 
+                                          FontSize="14"
+                                          Foreground="#6F7782"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Status Panel -->
+                        <Border Grid.Column="2" 
+                                Background="#F8F9FA" 
+                                CornerRadius="10" 
+                                Padding="20">
+                            <StackPanel>
+                                <TextBlock Text="STATUS" 
+                                          FontSize="12"
+                                          FontWeight="SemiBold"
+                                          Foreground="#6F7782"
+                                          
+                                          Margin="0,0,0,16"/>
+
+                                <Border Background="{Binding DiskStatus, Converter={StaticResource DiskStatusColorConverter}}"
+                                        CornerRadius="8"
+                                        Padding="16,12"
+                                        HorizontalAlignment="Stretch">
+                                    <TextBlock Text="{Binding DiskStatus}" 
+                                              FontSize="16"
+                                              FontWeight="Bold"
+                                              Foreground="White"
+                                              TextAlignment="Center"
+                                              />
+                                </Border>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

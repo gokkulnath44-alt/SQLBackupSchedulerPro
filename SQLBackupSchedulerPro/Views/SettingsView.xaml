@@ -1,0 +1,544 @@
+﻿<UserControl x:Class="SQLBackupSchedulerPro.Views.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SQLBackupSchedulerPro.Views"
+             mc:Ignorable="d" 
+             Background="#F8F9FA"
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <!-- Modern TextBox Style -->
+        <Style x:Key="ModernTextBoxStyle" TargetType="TextBox">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="#1A1D1F"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Height" Value="44"/>
+            <Setter Property="Padding" Value="12,0"/>
+            <Setter Property="BorderBrush" Value="#DEE2E6"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="8">
+                            <ScrollViewer x:Name="PART_ContentHost"
+                                        Margin="{TemplateBinding Padding}"
+                                        VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter Property="BorderBrush" Value="#2E7D32"/>
+                                <Setter Property="BorderThickness" Value="2"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="BorderBrush" Value="#ADB5BD"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Modern ComboBox Style -->
+        <Style x:Key="ModernComboBoxStyle" TargetType="ComboBox">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="#1A1D1F"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Height" Value="44"/>
+            <Setter Property="Padding" Value="12,0"/>
+            <Setter Property="BorderBrush" Value="#DEE2E6"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <Border Background="{TemplateBinding Background}"
+                                   BorderBrush="{TemplateBinding BorderBrush}"
+                                   BorderThickness="{TemplateBinding BorderThickness}"
+                                   CornerRadius="8">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <ContentPresenter Grid.Column="0"
+                                                    Content="{TemplateBinding SelectionBoxItem}"
+                                                    ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                                    Margin="{TemplateBinding Padding}"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalAlignment="Left"/>
+
+                                    <ToggleButton Grid.Column="1"
+                                                x:Name="ToggleButton"
+                                                Background="Transparent"
+                                                BorderThickness="0"
+                                                Focusable="False"
+                                                IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                                ClickMode="Press"
+                                                Width="40">
+                                        <Path Data="M7 10l5 5 5-5z"
+                                              Fill="#6F7782"
+                                              Stretch="Uniform"
+                                              Width="16" Height="16"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                                    </ToggleButton>
+                                </Grid>
+                            </Border>
+
+                            <Popup x:Name="PART_Popup"
+                                  IsOpen="{TemplateBinding IsDropDownOpen}"
+                                  Placement="Bottom"
+                                  AllowsTransparency="True">
+                                <Border Background="White"
+                                       BorderBrush="#DEE2E6"
+                                       BorderThickness="1"
+                                       CornerRadius="8"
+                                       Margin="0,4,0,0"
+                                       >
+                                    <ScrollViewer MaxHeight="300">
+                                        <ItemsPresenter/>
+                                    </ScrollViewer>
+                                </Border>
+                            </Popup>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="BorderBrush" Value="#ADB5BD"/>
+                            </Trigger>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter Property="BorderBrush" Value="#2E7D32"/>
+                                <Setter Property="BorderThickness" Value="2"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="ItemContainerStyle">
+                <Setter.Value>
+                    <Style TargetType="ComboBoxItem">
+                        <Setter Property="Height" Value="40"/>
+                        <Setter Property="Padding" Value="12,0"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ComboBoxItem">
+                                    <Border Background="{TemplateBinding Background}"
+                                           Padding="{TemplateBinding Padding}">
+                                        <ContentPresenter VerticalAlignment="Center"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#F8F9FA"/>
+                                        </Trigger>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter Property="Background" Value="#E8F5E9"/>
+                                            <Setter Property="Foreground" Value="#2E7D32"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Primary Button Style -->
+        <Style x:Key="PrimaryButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#2E7D32"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Height" Value="44"/>
+            <Setter Property="Padding" Value="24,0"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="8"
+                                Padding="{TemplateBinding Padding}">
+                            <StackPanel Orientation="Horizontal" 
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center">
+                                <ContentPresenter Content="{TemplateBinding Tag}"
+                                                 Width="20" Height="20"
+                                                 Margin="0,0,8,0"
+                                                 VerticalAlignment="Center"/>
+                                <ContentPresenter VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#1B5E20"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#0D3818"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Secondary Button Style -->
+        <Style x:Key="SecondaryButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="#6F7782"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Height" Value="44"/>
+            <Setter Property="Padding" Value="24,0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#E9ECEF"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="8"
+                                Padding="{TemplateBinding Padding}">
+                            <StackPanel Orientation="Horizontal"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center">
+                                <ContentPresenter Content="{TemplateBinding Tag}"
+                                                 Width="20" Height="20"
+                                                 Margin="0,0,8,0"
+                                                 VerticalAlignment="Center"/>
+                                <ContentPresenter VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#F8F9FA"/>
+                                <Setter Property="BorderBrush" Value="#DEE2E6"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#E9ECEF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Browse Button Style -->
+        <Style x:Key="BrowseButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#F8F9FA"/>
+            <Setter Property="Foreground" Value="#495057"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Height" Value="44"/>
+            <Setter Property="Padding" Value="16,0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#DEE2E6"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="8"
+                                Padding="{TemplateBinding Padding}">
+                            <StackPanel Orientation="Horizontal"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center">
+                                <Path Data="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"
+                                      Fill="{TemplateBinding Foreground}"
+                                      Stretch="Uniform"
+                                      Width="16" Height="16"
+                                      Margin="0,0,6,0"/>
+                                <ContentPresenter VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#E9ECEF"/>
+                                <Setter Property="BorderBrush" Value="#CED4DA"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#DEE2E6"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Card Style -->
+        <Style x:Key="CardStyle" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Padding" Value="24"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="20" 
+                                    ShadowDepth="0" 
+                                    Opacity="0.08" 
+                                    Color="#000000"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Drop Shadow for Popup -->
+        <DropShadowEffect x:Key="DropShadow"
+                         BlurRadius="20"
+                         ShadowDepth="0"
+                         Opacity="0.12"
+                         Color="#000000"/>
+
+        <!-- Label Style -->
+        <Style x:Key="LabelStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#495057"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+        </Style>
+
+        <!-- Help Text Style -->
+        <Style x:Key="HelpTextStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="#6F7782"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="Margin" Value="0,4,0,0"/>
+        </Style>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" 
+                  HorizontalScrollBarVisibility="Disabled"
+                  Padding="40,32,40,40">
+        <StackPanel MaxWidth="900">
+
+            <!-- Page Title -->
+            <TextBlock Text="Settings" 
+                      FontSize="28"
+                      FontWeight="Bold"
+                      Foreground="#1A1D1F"
+                      Margin="0,0,0,32"/>
+
+            <!-- Connection Settings Card -->
+            <Border Style="{StaticResource CardStyle}"
+                    Margin="0,0,0,24">
+                <StackPanel>
+                    <!-- Section Header -->
+                    <Grid Margin="0,0,0,24">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border Grid.Column="0"
+                                Width="48" Height="48"
+                                Background="#E3F2FD"
+                                CornerRadius="12"
+                                Margin="0,0,16,0">
+                            <Path Data="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM7 9h10v2H7V9zm6 5H7v-2h6v2zm4-6H7V6h10v2z"
+                                  Fill="#1565C0"
+                                  Stretch="Uniform"
+                                  Width="24" Height="24"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center"/>
+                        </Border>
+
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock Text="Connection Settings" 
+                                      FontSize="20"
+                                      FontWeight="Bold"
+                                      Foreground="#1A1D1F"
+                                      Margin="0,0,0,4"/>
+                            <TextBlock Text="Configure your SQL Server connection and backup location"
+                                      Style="{StaticResource HelpTextStyle}"
+                                      Margin="0"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Connection String -->
+                    <TextBlock Text="SQL Connection String"
+                              Style="{StaticResource LabelStyle}"/>
+                    <TextBox Text="{Binding ConnectionString}" 
+                            Style="{StaticResource ModernTextBoxStyle}"
+                            Margin="0,0,0,4"/>
+                    <TextBlock Text="Example: Server=localhost;Database=master;Integrated Security=True;"
+                              Style="{StaticResource HelpTextStyle}"
+                              Margin="0,0,0,20"/>
+
+                    <!-- Backup Folder -->
+                    <TextBlock Text="Backup Folder"
+                              Style="{StaticResource LabelStyle}"/>
+                    <Grid Margin="0,0,0,4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBox Grid.Column="0"
+                                Text="{Binding BackupPath}"
+                                Style="{StaticResource ModernTextBoxStyle}"
+                                IsReadOnly="True"
+                                Margin="0,0,12,0"/>
+
+                        <Button Grid.Column="1"
+                               Content="Browse"
+                               Style="{StaticResource BrowseButtonStyle}"
+                               Click="BrowseFolder"
+                               MinWidth="100"/>
+                    </Grid>
+                    <TextBlock Text="Choose where backup files will be stored on your system"
+                              Style="{StaticResource HelpTextStyle}"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Schedule Settings Card -->
+            <Border Style="{StaticResource CardStyle}"
+                    Margin="0,0,0,24">
+                <StackPanel>
+                    <!-- Section Header -->
+                    <Grid Margin="0,0,0,24">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border Grid.Column="0"
+                                Width="48" Height="48"
+                                Background="#F3E5F5"
+                                CornerRadius="12"
+                                Margin="0,0,16,0">
+                            <Path Data="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"
+                                  Fill="#6A1B9A"
+                                  Stretch="Uniform"
+                                  Width="24" Height="24"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center"/>
+                        </Border>
+
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock Text="Schedule Settings" 
+                                      FontSize="20"
+                                      FontWeight="Bold"
+                                      Foreground="#1A1D1F"
+                                      Margin="0,0,0,4"/>
+                            <TextBlock Text="Set up automatic daily backup schedule"
+                                      Style="{StaticResource HelpTextStyle}"
+                                      Margin="0"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Backup Time -->
+                    <TextBlock Text="Daily Backup Time"
+                              Style="{StaticResource LabelStyle}"/>
+                    <ComboBox ItemsSource="{Binding AvailableTimes}"
+                             SelectedItem="{Binding SelectedBackupTime}"
+                             Style="{StaticResource ModernComboBoxStyle}"
+                             Margin="0,0,0,4">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding StringFormat=hh\\:mm}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <TextBlock Text="Backups will run automatically at this time every day"
+                              Style="{StaticResource HelpTextStyle}"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Action Buttons Card -->
+            <Border Style="{StaticResource CardStyle}">
+                <StackPanel>
+                    <TextBlock Text="Actions" 
+                              FontSize="16"
+                              FontWeight="SemiBold"
+                              Foreground="#1A1D1F"
+                              Margin="0,0,0,16"/>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="16"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Test Connection Button -->
+                        <Button Grid.Column="0"
+                               Content="Test Connection"
+                               Style="{StaticResource SecondaryButtonStyle}"
+                               Click="TestConnection"
+                               HorizontalAlignment="Stretch">
+                            <Button.Tag>
+                                <Path Data="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+                                      Fill="#6F7782"
+                                      Stretch="Uniform"/>
+                            </Button.Tag>
+                        </Button>
+
+                        <!-- Save Settings Button -->
+                        <Button Grid.Column="2"
+                               Content="Save Settings"
+                               Style="{StaticResource PrimaryButtonStyle}"
+                               Click="SaveSettings"
+                               HorizontalAlignment="Stretch">
+                            <Button.Tag>
+                                <Path Data="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"
+                                      Fill="White"
+                                      Stretch="Uniform"/>
+                            </Button.Tag>
+                        </Button>
+                    </Grid>
+
+                    <!-- Info Box -->
+                    <Border Background="#E3F2FD"
+                            BorderBrush="#90CAF9"
+                            BorderThickness="1"
+                            CornerRadius="8"
+                            Padding="16"
+                            Margin="0,20,0,0">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Path Grid.Column="0"
+                                  Data="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+                                  Fill="#1565C0"
+                                  Stretch="Uniform"
+                                  Width="20" Height="20"
+                                  Margin="0,0,12,0"
+                                  VerticalAlignment="Top"/>
+
+                            <StackPanel Grid.Column="1">
+                                <TextBlock Text="Configuration Tips"
+                                          FontSize="13"
+                                          FontWeight="SemiBold"
+                                          Foreground="#1565C0"
+                                          Margin="0,0,0,4"/>
+                                <TextBlock Text="• Test your connection before saving to ensure it works correctly"
+                                          FontSize="12"
+                                          Foreground="#0D47A1"
+                                          Margin="0,0,0,2"/>
+                                <TextBlock Text="• Make sure the backup folder has sufficient disk space"
+                                          FontSize="12"
+                                          Foreground="#0D47A1"
+                                          Margin="0,0,0,2"/>
+                                <TextBlock Text="• Choose a backup time when database activity is low"
+                                          FontSize="12"
+                                          Foreground="#0D47A1"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
